@@ -81,7 +81,7 @@ class ImageUploaderThumbnail extends React.Component {
                      ${this.props.ifSelectedThumbnail ? 'image-uploader__thumbnail--is-selected': '' } 
                     `}
 
-                style={{backgroundImage: `url(${this.props.images})`,}}>
+                style={{backgroundImage: `url(${this.props.image})`,}}>
 
             </div>
             

@@ -17,7 +17,6 @@ class ImageUploader extends React.Component {
     }
     componentDidUpdate(){
         let formData = new FormData();
-
         this.state.images.forEach(item =>{
             formData.append('images', item.imageData);
         });
@@ -45,12 +44,12 @@ class ImageUploader extends React.Component {
             reader.file = image;
             reader.onload = e => {
                 if (counter === this.imageCount - 1) {
-                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: compress(e.target.result)});
+                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result});
                     this.setState({images: this.newImages});
                     this.newImages = [];
                     this.setState({isLoadingImages: false});
                 } else {
-                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: compress(e.target.result)});
+                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result});
                 }
 
                 counter++;
