@@ -36,12 +36,7 @@ class ImageUploaderThumbnail extends React.Component {
             eventPosition.x = event.clientX;
             eventPosition.y = event.clientY;
         }
-        // else if(event.type == 'touchstart'){
-        //     let touch = event.touches[0];
-        //     eventPosition.x = touch.clientX;
-        //     eventPosition.y = touch.clientY;
-        // }
-       
+      
         
         this.setState({isDragged:true});
         this.props.onDragged(this.ref, {x: eventPosition.x - event.target.offsetLeft, y: eventPosition.y - event.target.offsetTop} ,true,this.props.id);
