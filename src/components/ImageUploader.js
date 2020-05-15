@@ -26,7 +26,7 @@ class ImageUploader extends React.Component {
   
 
     onSelectThumbnail = id =>{
-     
+      
         this.setState({selectedThumbnail: id});
     }
 
@@ -44,12 +44,12 @@ class ImageUploader extends React.Component {
             reader.file = image;
             reader.onload = e => {
                 if (counter === this.imageCount - 1) {
-                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result});
+                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result, order: counter});
                     this.setState({images: this.newImages});
                     this.newImages = [];
                     this.setState({isLoadingImages: false});
                 } else {
-                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result});
+                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result, order: counter});
                 }
 
                 counter++;
@@ -75,29 +75,52 @@ class ImageUploader extends React.Component {
         
     }
 
-
-
-    setPosition = (oldPosition, newPosition) =>{
-       
-        let tempState = [...this.state.images];
-        // console.log("tempstate:",tempState);
-       
-        let itemToSwap = tempState[oldPosition];
-
-        tempState.splice(oldPosition,1);
-
-        
-        if(oldPosition > newPosition && !this.state.isMobileDevice){
-            newPosition++;
+    decrementOrder(order, rangeStart, rangeEnd){
+        if(order >= rangeStart && order <= rangeEnd){
+            return --order;
         }
+        return order;
+    }
+
+    incrementOrder(order, rangeStart, rangeEnd){
+        if(order >= rangeStart && order <= rangeEnd){
+            return ++order;
+        }
+        return order;
+    }
+
+    setPosition = (oldPositionOrder, newPositionOrder) =>{
+     
+        let tempState = [...this.state.images];
         
-        tempState.splice(newPosition,0,itemToSwap);
+        let oldPositionIndex = tempState.findIndex(item => item.order === oldPositionOrder );
+                
+        if( oldPositionIndex !== -1 ){
+
+            if(oldPositionOrder < newPositionOrder){
+                tempState.map(image =>{
+                    image.order = this.decrementOrder(image.order, oldPositionOrder, newPositionOrder );
+                });
+            }
+
+            if(oldPositionOrder > newPositionOrder){
+                tempState.map(image =>{
+                    image.order = this.incrementOrder(image.order, newPositionOrder,oldPositionOrder );
+                });
+            }
+
+
+            tempState[oldPositionIndex].order = newPositionOrder;
+          
+        }
+  
+      
       
         this.setState({images: tempState, });
 
-        if(this.state.isMobileDevice){
-            this.setState({selectedThumbnail: newPosition,  });
-        }
+        // if(this.state.isMobileDevice){
+        //     this.setState({selectedThumbnail: newPosition,  });
+        // }
      }
  
      renderThumbnailPositioner = () =>{

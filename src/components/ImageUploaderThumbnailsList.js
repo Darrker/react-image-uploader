@@ -51,7 +51,11 @@ class ImageUploaderThumbnailsList extends React.Component {
             }
 
             isMobileDevice={this.props.isMobileDevice}
+
+            order ={image.order}
+
             />
+           
         });
 
         return thumbnails;
@@ -74,19 +78,20 @@ class ImageUploaderThumbnailsList extends React.Component {
 
     }
 
-    onEmitThumbnail = (thumbnail, id) => {
+    onEmitThumbnail = (thumbnail, id, order) => {
 
             this.thumbnails.splice(id, 1);
             this.thumbnails.push({
                 ref: thumbnail.current,
-                id: id
+                id: id,
+                order: order,
             });
       
 
 
     }
 
-    onIsDragged = (elem, startValue, dragState, id) => {
+    onIsDragged = (elem, startValue, dragState, id,order) => {
 
         this.setState({
             isDrag: dragState
@@ -99,7 +104,8 @@ class ImageUploaderThumbnailsList extends React.Component {
                 y: startValue.y,
 
             },
-            id: id
+            id: id,
+            order: order
 
         };
 
@@ -116,27 +122,39 @@ class ImageUploaderThumbnailsList extends React.Component {
         var thumbnailsSorter = new CollisionsDetector(this.thumbnails, this.dragElem);
 
         thumbnailsSorter.analise((item, where) => {
-                console.log(item);
 
                 switch(where){
                     case 'before':{
-                        if(item.id == 0){
-                            this.props.onChangePosition(this.dragElem.id, item.id);
-                        }
-                        else{
-                            this.props.onChangePosition(this.dragElem.id, item.id-1);
-                        }
+                        // if(item.order == 0){
+                        //     this.props.onChangePosition(this.dragElem.order, item.order);
+                        // }
+                       // else{
+                            
+                      //  }
                      
+
+                      if(this.dragElem.order > item.order){
+                        this.props.onChangePosition(this.dragElem.order, item.order);
+                      }
+                      if(this.dragElem.order < item.order){
+                        this.props.onChangePosition(this.dragElem.order, item.order-1);
+                      }
+
                         break;
                     }
                     case 'after':{
-                        if(item.id == this.thumbnails.length - 1){
-                            this.props.onChangePosition(this.dragElem.id, item.id);
-                        }
-                        else{
-                            this.props.onChangePosition(this.dragElem.id, item.id );
-                        }
-        
+                        // if(item.order == this.thumbnails.length - 1){
+                        //     this.props.onChangePosition(this.dragElem.order, item.order);
+                        // }
+                        // else{
+                          
+                        //}
+                        if(this.dragElem.order > item.order){
+                            this.props.onChangePosition(this.dragElem.order, item.order+1);
+                          }
+                          if(this.dragElem.order < item.order){
+                            this.props.onChangePosition(this.dragElem.order, item.order);
+                          }
                         break;
                     }
                     

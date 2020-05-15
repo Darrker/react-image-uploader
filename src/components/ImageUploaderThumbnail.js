@@ -20,10 +20,10 @@ class ImageUploaderThumbnail extends React.Component {
     }
 
     componentDidUpdate(){
-        this.props.emitThumbnail(this.ref, this.props.id);
+        this.props.emitThumbnail(this.ref, this.props.id, this.props.order);
     } 
     componentDidMount(){
-        this.props.emitThumbnail(this.ref, this.props.id);
+        this.props.emitThumbnail(this.ref, this.props.id, this.props.order);
     } 
 
     onMouseDown = (event) =>{
@@ -36,10 +36,10 @@ class ImageUploaderThumbnail extends React.Component {
             eventPosition.x = event.clientX;
             eventPosition.y = event.clientY;
         }
-      
+   
         
         this.setState({isDragged:true});
-        this.props.onDragged(this.ref, {x: eventPosition.x - event.target.offsetLeft, y: eventPosition.y - event.target.offsetTop} ,true,this.props.id);
+        this.props.onDragged(this.ref, {x: eventPosition.x - event.target.offsetLeft, y: eventPosition.y - event.target.offsetTop} ,true,this.props.id,this.props.order);
         
     }
 
@@ -60,7 +60,7 @@ class ImageUploaderThumbnail extends React.Component {
     render() {
         
         return(
-        <li className="image-uploader__thumbnail-wrapper"  >
+        <li className="image-uploader__thumbnail-wrapper" style={{order: this.props.order}} >
                
             <div
                 ref={this.ref}
@@ -76,7 +76,7 @@ class ImageUploaderThumbnail extends React.Component {
                      ${this.props.ifSelectedThumbnail ? 'image-uploader__thumbnail--is-selected': '' } 
                     `}
 
-                style={{backgroundImage: `url(${this.props.image})`,}}>
+                style={{backgroundImage: !this.state.isDragged ? `url(${this.props.image } )` :'',}}>
 
             </div>
             
