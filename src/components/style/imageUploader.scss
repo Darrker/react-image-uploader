@@ -1,19 +1,19 @@
 // iu = image uploader
 
-$iu_border_color: #dedef3;
+$iu_border_color: #98c1d9;
 $iu_border_width: 2px;
 $iu_border_style: dashed;
 $iu_border_radius: 10px;
 
 // buttons
 
-$button_bg_color: #ec184a;
-$button_color: white;
+$button_bg_color: #ee6c4d;
+$button_color: #e0fbfc;
 
 
 // thumbnails
-$thumbnail_size: 90px;
-$thumbnail_select_border_color: yellow;
+$thumbnail_size: 120px;
+$thumbnail_select_border_color: #ee6c4d;
 $thumbnail_select_border_width: 4px;
 $thumbnail_margin: 5px;
 
@@ -21,16 +21,11 @@ $thumbnail_margin: 5px;
     padding: 20px;
     border: $iu_border_width $iu_border_style $iu_border_color;
     border-radius: $iu_border_radius;
-    display: inline-block;;
+    display: inline-flex;;
     font-size: 14px;
-    * {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
+    flex-direction: column;
+    align-items: center;
+    
     &__button{
         background-color: $button_bg_color;
         color: $button_color;
@@ -43,6 +38,7 @@ $thumbnail_margin: 5px;
 
     &__file-counter{
         margin-left: 20px;;
+        color: #e0fbfc;
     }
 
 
@@ -139,8 +135,9 @@ $thumbnail_margin: 5px;
     left: 0;
     width: 100%;
     border-top: 2px solid $iu_border_color;
-    
-
+    background-color: #e0fbfc;
+    text-align: center;
+    color: #293241;
     &__title{
         font-size: 20px;
         font-weight: 600;

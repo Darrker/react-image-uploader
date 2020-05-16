@@ -85,8 +85,8 @@ class ImageUploaderThumbnailsList extends React.Component {
 
     }
 
-    componentWillUpdate(){
-        console.log('WILL UPDATE');
+    getSnapshotBeforeUpdate(){
+     
         this.thumbnails = [];
     }
 
@@ -231,15 +231,18 @@ class ImageUploaderThumbnailsList extends React.Component {
     render() {
         return ( 
             <div>
-                <ul
-                    className = "image-uploader__thumbnails-list"
-                  // onMouseMove = { !this.props.isMobileDevice ? this.onMouseMove : e=>{ return false} }
-                   // onTouchMove = {this.onMouseMove}
-                >
-            
-                {this.renderThumbnails()}
+                { this.props.thumbnails.length ? 
+                    <ul
+                        className = "image-uploader__thumbnails-list"
+                    // onMouseMove = { !this.props.isMobileDevice ? this.onMouseMove : e=>{ return false} }
+                    // onTouchMove = {this.onMouseMove}
+                    >
+                
+                    {this.renderThumbnails()}
 
-                </ul>
+                    </ul>
+                : ''
+                }
             </div>
 
         );
