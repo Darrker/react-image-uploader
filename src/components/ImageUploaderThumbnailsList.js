@@ -10,10 +10,12 @@ class ImageUploaderThumbnailsList extends React.Component {
     dragElem;
     thumbnails = [];
  
+    componentDidMount(){
+        window.addEventListener('mousemove', this.onMouseMove);
+    }
 
-
-    onSelectThumbnail = id => {
-        this.props.onSelectThumbnail(id);
+    onSelectThumbnail = order => {
+        this.props.onSelectThumbnail(order);
     }
     renderThumbnails = () => {
 
@@ -23,7 +25,7 @@ class ImageUploaderThumbnailsList extends React.Component {
                 index
             }
             ifSelectedThumbnail = {
-                this.props.ifSelectedThumbnail === index ? true : false
+                this.props.ifSelectedThumbnail === image.order ? true : false
             }
             emitThumbnail = {
                 this.onEmitThumbnail
@@ -68,15 +70,7 @@ class ImageUploaderThumbnailsList extends React.Component {
 
     }
 
-    // I know... This is legacy method, but i haven't had any idea to use other alternative
-    componentWillUpdate() {
-
-        this.thumbnails = [];
-
-    }
-    componentDidUpdate() {
-
-    }
+   
 
     onEmitThumbnail = (thumbnail, id, order) => {
 
@@ -89,6 +83,11 @@ class ImageUploaderThumbnailsList extends React.Component {
       
 
 
+    }
+
+    componentWillUpdate(){
+        console.log('WILL UPDATE');
+        this.thumbnails = [];
     }
 
     onIsDragged = (elem, startValue, dragState, id,order) => {
@@ -118,7 +117,7 @@ class ImageUploaderThumbnailsList extends React.Component {
             isDrag: dragState
         });
 
-
+        console.log('DRAG OUT');
         var thumbnailsSorter = new CollisionsDetector(this.thumbnails, this.dragElem);
 
         thumbnailsSorter.analise((item, where) => {
@@ -172,15 +171,15 @@ class ImageUploaderThumbnailsList extends React.Component {
 
         //  this.dragElem.ref.style.left = 'auto';
         //  this.dragElem.ref.style.top = 'auto';
-        this.dragElem.ref.style.transform = 'translate(0,0)';
+       this.dragElem.ref.style.transform = 'translate(0,0)';
 
     }
 
     onMouseMove = event => {
       
-     
+    
         if (this.state.isDrag) {
-          
+            event.preventDefault();
             var thumbnailsSorter = new CollisionsDetector(this.thumbnails, this.dragElem);
             thumbnailsSorter.analise((item, where) => {
                     switch (where) {
@@ -221,7 +220,7 @@ class ImageUploaderThumbnailsList extends React.Component {
             // this.dragElem.ref.style.left = (eventPosition.x - this.dragElem.startPosition.x) + 'px';
             // this.dragElem.ref.style.top = (eventPosition.y - this.dragElem.startPosition.y) + 'px';
 
-            this.dragElem.ref.style.transform = `translate(${eventPosition.x - this.dragElem.startPosition.x}px, ${eventPosition.y - this.dragElem.startPosition.y}px )`;
+           this.dragElem.ref.style.transform = `translate(${eventPosition.x - this.dragElem.startPosition.x}px, ${eventPosition.y - this.dragElem.startPosition.y}px )`;
 
 
         }
@@ -234,7 +233,7 @@ class ImageUploaderThumbnailsList extends React.Component {
             <div>
                 <ul
                     className = "image-uploader__thumbnails-list"
-                    onMouseMove = { !this.props.isMobileDevice ? this.onMouseMove : e=>{ return false} }
+                  // onMouseMove = { !this.props.isMobileDevice ? this.onMouseMove : e=>{ return false} }
                    // onTouchMove = {this.onMouseMove}
                 >
             

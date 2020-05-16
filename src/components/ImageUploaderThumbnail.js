@@ -53,7 +53,7 @@ class ImageUploaderThumbnail extends React.Component {
     onClick = event =>{
  
         event.preventDefault();
-        this.props.onSelectThumbnail(this.props.id);
+        this.props.onSelectThumbnail(this.props.order);
     }
    
 
@@ -76,7 +76,7 @@ class ImageUploaderThumbnail extends React.Component {
                      ${this.props.ifSelectedThumbnail ? 'image-uploader__thumbnail--is-selected': '' } 
                     `}
 
-                style={{backgroundImage: !this.state.isDragged ? `url(${this.props.image } )` :'',}}>
+                style={{backgroundImage:`url(${this.props.image } )`}}>
 
             </div>
             

@@ -2,7 +2,7 @@ import React from 'react';
 import ImageUploaderThumbnailsList from './ImageUploaderThumbnailsList';
 import ImageUploaderThumbnailPositioner from './ImageUploaderThumbnailPositioner';
 import Preloader from './Preloader';
-import { compress } from 'lz-string';
+import axios from 'axios';
 import {mobileDetector} from '../mobileDetector';
 import './style/imageUploader.scss';
 
@@ -17,17 +17,22 @@ class ImageUploader extends React.Component {
     }
     componentDidUpdate(){
         let formData = new FormData();
-        this.state.images.forEach(item =>{
-            formData.append('images', item.imageData);
+        let sortedImages = this.state.images.sort((a,b) => a-b);
+        sortedImages.forEach(item =>{
+            formData.append('images', item.imageData, item.imageData.name);
+            
         });
-        console.log(this.state.selectedThumbnail);
-        //this.props.onAddData(formData);
+        
+        if(this.props.imageData){
+             this.props.imageData(formData);
+        }
+     
     }
   
 
-    onSelectThumbnail = id =>{
-      
-        this.setState({selectedThumbnail: id});
+    onSelectThumbnail = order =>{
+     
+        this.setState({selectedThumbnail: order});
     }
 
     newImages = [];
@@ -36,31 +41,25 @@ class ImageUploader extends React.Component {
     onAddImages = (event) => {
         this.setState({isLoadingImages: true});
 
-        this.imageCount = event.target.files.length;
-        let counter = 0;
+        let eventFiles = event.target.files;
+        let data = new FormData();
         Array.from(event.target.files).map((image) =>{
-          
-            let reader = new FileReader();
-            reader.file = image;
-            reader.onload = e => {
-                if (counter === this.imageCount - 1) {
-                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result, order: counter});
-                    this.setState({images: this.newImages});
-                    this.newImages = [];
-                    this.setState({isLoadingImages: false});
-                } else {
-                    this.newImages.push({ id: e.target.file.name + new Date().getTime(), imageData: e.target.file, imageBase64: e.target.result, order: counter});
-                }
-
-                counter++;
-               
-
-            }
-        
-            reader.readAsDataURL(image);
+             
+            data.append(this.props.requestDataName, image, image.name);
 
         });
-        
+  
+       let that = this;
+      
+        axios.post(this.props.requestURL,data)
+            .then(function(response){
+               response.data.forEach((image, index) =>{
+                    that.newImages.push({ id: image.name , imageData: eventFiles[index], imageBase64: image.url, order: index});
+               });
+               that.setState({images: that.newImages});
+                       that.newImages = [];
+                       that.setState({isLoadingImages: false});
+            });
         
        
     }
@@ -90,37 +89,41 @@ class ImageUploader extends React.Component {
     }
 
     setPosition = (oldPositionOrder, newPositionOrder) =>{
-     
         let tempState = [...this.state.images];
-        
         let oldPositionIndex = tempState.findIndex(item => item.order === oldPositionOrder );
-                
         if( oldPositionIndex !== -1 ){
 
             if(oldPositionOrder < newPositionOrder){
-                tempState.map(image =>{
+                tempState.forEach(image =>{
                     image.order = this.decrementOrder(image.order, oldPositionOrder, newPositionOrder );
                 });
             }
 
             if(oldPositionOrder > newPositionOrder){
-                tempState.map(image =>{
+                tempState.forEach(image =>{
                     image.order = this.incrementOrder(image.order, newPositionOrder,oldPositionOrder );
                 });
             }
 
 
             tempState[oldPositionIndex].order = newPositionOrder;
-          
-        }
-  
-      
-      
-        this.setState({images: tempState, });
+            this.setState({images: tempState, });
 
-        // if(this.state.isMobileDevice){
-        //     this.setState({selectedThumbnail: newPosition,  });
-        // }
+        }
+     }
+
+    setPositionByPositioner = (oldPositionOrder, newPositionOrder) =>{
+        let tempState = [...this.state.images];
+        let oldPositionIndex = tempState.findIndex(image => image.order === oldPositionOrder);
+        let newPositionIndex = tempState.findIndex(image => image.order === newPositionOrder);
+        
+        if(oldPositionIndex !== -1 && newPositionIndex !== -1){
+            tempState[oldPositionIndex].order = newPositionOrder;
+            tempState[newPositionIndex].order = oldPositionOrder;
+        }
+
+        this.setState({selectedThumbnail: newPositionOrder, images: tempState  });
+       
      }
  
      renderThumbnailPositioner = () =>{
@@ -129,7 +132,7 @@ class ImageUploader extends React.Component {
             <ImageUploaderThumbnailPositioner
                thumbnailPosition={this.state.selectedThumbnail}
                thumbnailsCounter={this.state.images.length}
-               changePosition={this.setPosition}
+               changePosition={this.setPositionByPositioner}
                deleteImage={this.onDeleteImage}
                onDisableComponent={() =>{ this.setState({selectedThumbnail: false} ) }}
                />
