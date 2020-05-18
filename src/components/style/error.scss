@@ -1,0 +1,27 @@
+
+
+.error{
+    display: flex;
+    color: white;
+    padding: 15px  ;
+    background-color: #ef233c;
+    position: relative;
+    margin-top: 20px;
+    &__remove-button{
+        background-color: transparent;
+        color: white;
+        border-width: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        cursor: pointer;
+        outline: 0;
+    }
+
+    &__content{
+        padding-right: 30px;
+        font-size: .775rem;
+        font-weight: 600;
+    }
+}

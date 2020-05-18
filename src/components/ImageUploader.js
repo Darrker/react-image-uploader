@@ -5,13 +5,13 @@ import Preloader from './Preloader';
 import axios from 'axios';
 import {mobileDetector} from '../mobileDetector';
 import './style/imageUploader.scss';
-
+import ImageUploaderErrors from './imageUploaderErrors';
 class ImageUploader extends React.Component {
   
 
     constructor(props){
         super(props);
-        this.state = { images: [], selectedThumbnail: false, isMobileDevice: mobileDetector(), isLoadingImages: false };
+        this.state = { images: [], selectedThumbnail: false, isMobileDevice: mobileDetector(), isLoadingImages: false, errors: [] };
         this.inputData = React.createRef();
 
     }
@@ -36,31 +36,42 @@ class ImageUploader extends React.Component {
     }
 
     newImages = [];
-    imageCount = 0;
+
   
     onAddImages = (event) => {
-        this.setState({isLoadingImages: true});
+ 
 
         let eventFiles = event.target.files;
         let data = new FormData();
-        Array.from(event.target.files).map((image) =>{
-             
-            data.append(this.props.requestDataName, image, image.name);
+        Array.from(event.target.files).forEach((image) =>{
+            if((/\.(gif|jpe?g|tiff|png|webp|bmp)$/i).test(image.name)) {
+                data.append(this.props.requestDataName, image, image.name);
+            }
+            else{
+                this.setState({errors: ['Nieprawidlowy typ pliku']})
+            }
 
         });
-  
-       let that = this;
-      
-        axios.post(this.props.requestURL,data)
-            .then(function(response){
-               response.data.forEach((image, index) =>{
-                    that.newImages.push({ id: image.name , imageData: eventFiles[index], imageBase64: image.url, order: index});
-               });
-               that.setState({images: that.newImages});
-                       that.newImages = [];
-                       that.setState({isLoadingImages: false});
-            });
         
+        if(!this.state.errors.length){
+            this.setState({isLoadingImages: true});
+
+            axios.post(this.props.requestURL,data)
+                .then(response =>{
+                   response.data.forEach((image, index) =>{
+                        this.newImages.push({ id: image.name , imageData: eventFiles[index], imageBase64: image.url, order: index});
+                   });
+                   this.setState({images: this.newImages});
+                           
+                           this.setState({isLoadingImages: false});
+                }).catch(error=>{
+                    this.setState({isLoadingImages: false});
+               
+                    this.setState({errors: ['Błąd serwera - spróbuj ponownie później']});
+                });
+            
+        }
+    
        
     }
 
@@ -140,6 +151,17 @@ class ImageUploader extends React.Component {
          }
      }
 
+    onRemoveError = error =>{
+        let tempState = [...this.state.errors];
+        let filteredState = tempState.filter(item => {
+            return item !== error;
+        });
+
+        this.setState({errors: filteredState });
+   
+
+    }
+
     render(){
         return(
             <div className="image-uploader">
@@ -164,7 +186,7 @@ class ImageUploader extends React.Component {
                      
                         {this.renderThumbnailPositioner()}
                         
-                        
+                <ImageUploaderErrors errors={this.state.errors} onRemoveError={this.onRemoveError}/>
             </div>
         );
     }
