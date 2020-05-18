@@ -1,14 +1,15 @@
 .preloader{
     width: 25px;
     height: 25px;
-    margin: 0;
+    margin: 25px auto;
     background: transparent;
-    border-top: 3px solid #009688;
+    border-top: 3px solid #caf0f8;
     border-right: 3px solid transparent;
     border-radius: 50%;
     -webkit-animation: 1s spin linear infinite;
     animation: 1s spin linear infinite;
-    margin: 0 auto;
+
+    
 }
 
 

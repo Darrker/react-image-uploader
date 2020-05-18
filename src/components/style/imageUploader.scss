@@ -1,19 +1,19 @@
 // iu = image uploader
 
-$iu_border_color: #98c1d9;
+$iu_border_color: #caf0f8;
 $iu_border_width: 2px;
 $iu_border_style: dashed;
 $iu_border_radius: 10px;
 
 // buttons
 
-$button_bg_color: #ee6c4d;
+$button_bg_color: #ef233c;
 $button_color: #e0fbfc;
 
 
 // thumbnails
 $thumbnail_size: 120px;
-$thumbnail_select_border_color: #ee6c4d;
+$thumbnail_select_border_color: #ef233c;
 $thumbnail_select_border_width: 4px;
 $thumbnail_margin: 5px;
 
@@ -25,6 +25,7 @@ $thumbnail_margin: 5px;
     font-size: 14px;
     flex-direction: column;
     align-items: center;
+    
     
     &__button{
         background-color: $button_bg_color;
@@ -80,7 +81,8 @@ $thumbnail_margin: 5px;
                 left: 0;
                 width: 50%;
                 height: 100%;
-                background-color: rgba(0,0,0,.5);
+                background-color:#03045e;
+                opacity: .8;
             }
         }
 
@@ -92,7 +94,8 @@ $thumbnail_margin: 5px;
                 right: 0;
                 width: 50%;
                 height: 100%;
-                background-color: rgba(0,0,0,.5);
+                background-color:#03045e;
+                opacity: .8;
             }
         }
     
