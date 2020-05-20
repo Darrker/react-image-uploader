@@ -11,7 +11,7 @@ class ImageUploader extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = { images: [], selectedThumbnail: false, isMobileDevice: !mobileDetector(), isLoadingImages: false, errors: [] };
+        this.state = { images: [], selectedThumbnail: false, uploadProgress: 0, isMobileDevice: !mobileDetector(), isLoadingImages: false, errors: [] };
         this.inputData = React.createRef();
 
     }
@@ -59,14 +59,15 @@ class ImageUploader extends React.Component {
 
             axios.post(this.props.requestURL,data,
                     { headers: {
-                        'x-access-token': 'od0zoE9JfjkeUi0gvsXG'
-                    }
+                        'x-access-token': 'od0zoE9JfjkeUi0gvsXG',
+                    },
+                    onUploadProgress: e => this.setState({uploadProgress: Math.round(e.loaded * 100 / e.total)})
                 })
                 .then(response =>{
                    response.data.forEach((image, index) =>{
                         this.newImages.push({ id: image.name , imageData: eventFiles[index], imageSRC: image.url, order: index});
                    });
-                   this.setState({images: this.newImages,isLoadingImages: false});
+                   this.setState({images: this.newImages,isLoadingImages: false, uploadProgress: 0});
                      
                    this.newImages = [];
                 }).catch(error=>{
@@ -216,7 +217,7 @@ class ImageUploader extends React.Component {
                             onDeleteImage={this.onDeleteImage}
                             thumbnails={this.state.images}/>
 
-                           {this.state.isLoadingImages ? <Preloader /> : ''} 
+                           {this.state.isLoadingImages ? <Preloader progress={this.state.uploadProgress} /> : ''} 
                      
                         {this.renderThumbnailPositioner()}
                 {this.state.errors.length ?

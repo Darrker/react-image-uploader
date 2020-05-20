@@ -7,7 +7,12 @@ class Preloader extends React.Component{
         return(
 
             <div className="preloader">
-                
+                <div className="preloader__circle"></div>
+                {this.props.progress ?
+                    <span className="preloader__progress">
+                        {this.props.progress}%
+                    </span>
+                 :''}
             </div>
         );
     }
