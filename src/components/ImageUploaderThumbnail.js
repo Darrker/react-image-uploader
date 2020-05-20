@@ -16,7 +16,7 @@ class ImageUploaderThumbnail extends React.Component {
     onDeleteItem = (e) =>{
         e.preventDefault();
 
-        this.props.onDeleteImage(this.props.id);
+        this.props.onDeleteImage(this.props.order);
     }
 
     componentDidUpdate(){
@@ -27,12 +27,12 @@ class ImageUploaderThumbnail extends React.Component {
     } 
 
     onMouseDown = (event) =>{
-        console.log('mouse up');
+   
         let eventPosition = {
             x: 0,
             y: 0,
         };
-        if(event.type == 'mousedown'){
+        if(event.type === 'mousedown'){
             eventPosition.x = event.clientX;
             eventPosition.y = event.clientY;
         }

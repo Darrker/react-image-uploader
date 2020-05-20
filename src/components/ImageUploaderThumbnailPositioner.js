@@ -47,7 +47,7 @@ class ImageUploaderThumbnailPositioner extends React.Component {
                     {this.props.thumbnailPosition > 0 ?
 
                         <li className="thumbnail-positioner__action thumbnail-positioner__action--set-to-previous"  onClick={this.positionMinus}>
-                            <img className="thumbnail-positioner__action__icon" src={arrow} />
+                            <img className="thumbnail-positioner__action__icon" src={arrow} alt="" />
                         </li>
 
                      : ''}
@@ -55,7 +55,7 @@ class ImageUploaderThumbnailPositioner extends React.Component {
                     {this.props.thumbnailPosition < this.props.thumbnailsCounter-1 ?
 
                         <li className="thumbnail-positioner__action thumbnail-positioner__action--set-to-next" onClick={this.positionPlus}> 
-                            <img className="thumbnail-positioner__action__icon" src={arrow} />
+                            <img className="thumbnail-positioner__action__icon" src={arrow} alt="" />
                         </li> 
 
                     : ''}

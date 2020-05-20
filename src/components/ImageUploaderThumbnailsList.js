@@ -49,7 +49,7 @@ class ImageUploaderThumbnailsList extends React.Component {
                 this.onDraggedOut
             }
             image = {
-                image.imageBase64
+                image.imageSRC
             }
 
             isMobileDevice={this.props.isMobileDevice}
@@ -85,9 +85,11 @@ class ImageUploaderThumbnailsList extends React.Component {
 
     }
 
-    getSnapshotBeforeUpdate(){
+    shouldComponentUpdate(){
      
         this.thumbnails = [];
+        return true;
+      
     }
 
     onIsDragged = (elem, startValue, dragState, id,order) => {
@@ -117,7 +119,7 @@ class ImageUploaderThumbnailsList extends React.Component {
             isDrag: dragState
         });
 
-        console.log('DRAG OUT');
+      
         var thumbnailsSorter = new CollisionsDetector(this.thumbnails, this.dragElem);
 
         thumbnailsSorter.analise((item, where) => {
@@ -156,6 +158,9 @@ class ImageUploaderThumbnailsList extends React.Component {
                           }
                         break;
                     }
+                    default: {
+                        break;
+                    }
                     
         
                 }
@@ -191,6 +196,9 @@ class ImageUploaderThumbnailsList extends React.Component {
                             item.ref.classList.add('after');
                             break;
                         }
+                        default: {
+                            break;
+                        }
 
 
                     }
@@ -207,14 +215,15 @@ class ImageUploaderThumbnailsList extends React.Component {
                 x: 0,
                 y: 0,
             };
-            if (event.type == 'mousemove') {
+            if (event.type === 'mousemove') {
                 eventPosition.x = event.clientX;
                 eventPosition.y = event.clientY;
-            } else if (event.type == 'touchmove') {
-                let touch = event.touches[0];
-                eventPosition.x = touch.clientX;
-                eventPosition.y = touch.clientY;
-            }
+            } 
+            // else if (event.type === 'touchmove') {
+            //     let touch = event.touches[0];
+            //     eventPosition.x = touch.clientX;
+            //     eventPosition.y = touch.clientY;
+            // }
 
 
             // this.dragElem.ref.style.left = (eventPosition.x - this.dragElem.startPosition.x) + 'px';

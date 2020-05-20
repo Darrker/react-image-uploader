@@ -11,7 +11,7 @@ class ImageUploader extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = { images: [], selectedThumbnail: false, isMobileDevice: mobileDetector(), isLoadingImages: false, errors: [] };
+        this.state = { images: [], selectedThumbnail: false, isMobileDevice: !mobileDetector(), isLoadingImages: false, errors: [] };
         this.inputData = React.createRef();
 
     }
@@ -54,20 +54,23 @@ class ImageUploader extends React.Component {
         });
         
         if(!this.state.errors.length){
-            this.setState({isLoadingImages: true});
+ 
+            this.setState({images: [],isLoadingImages: true});
 
-            axios.post(this.props.requestURL,data)
+            axios.post(this.props.requestURL,data,
+                    { headers: {
+                        'x-access-token': 'od0zoE9JfjkeUi0gvsXG'
+                    }
+                })
                 .then(response =>{
                    response.data.forEach((image, index) =>{
-                        this.newImages.push({ id: image.name , imageData: eventFiles[index], imageBase64: image.url, order: index});
+                        this.newImages.push({ id: image.name , imageData: eventFiles[index], imageSRC: image.url, order: index});
                    });
-                   this.setState({images: this.newImages});
-                           
-                           this.setState({isLoadingImages: false});
+                   this.setState({images: this.newImages,isLoadingImages: false});
+                     
+                   this.newImages = [];
                 }).catch(error=>{
-                    this.setState({isLoadingImages: false});
-               
-                    this.setState({errors: ['Błąd serwera - spróbuj ponownie później']});
+                    this.setState({errors: ['Błąd serwera - spróbuj ponownie później'], isLoadingImages: false});
                 });
             
         }
@@ -77,11 +80,22 @@ class ImageUploader extends React.Component {
 
    
  
-    onDeleteImage = imageID =>{
+    onDeleteImage = order =>{
         let tempState = [...this.state.images];
-        tempState.splice(imageID,1);
-        
-        this.setState({images: tempState, selectedThumbnail: false});
+        let deleteIndex = tempState.findIndex(elem => elem.order === order);
+
+        if(deleteIndex !== -1){
+            tempState.splice(deleteIndex,1);
+            tempState.forEach(item =>{
+                if(item.order > order){
+                    item.order--;
+                }
+            });
+         
+            this.setState({images: tempState, selectedThumbnail: false});
+        }
+
+    
         
     }
 
@@ -120,30 +134,50 @@ class ImageUploader extends React.Component {
             tempState[oldPositionIndex].order = newPositionOrder;
             this.setState({images: tempState, });
 
+            if(this.state.isMobileDevice){
+            
+                this.setState({    selectedThumbnail: newPositionOrder,});
+            }
+
         }
      }
 
-    setPositionByPositioner = (oldPositionOrder, newPositionOrder) =>{
+   setPosition = (oldPositionOrder, newPositionOrder) =>{
         let tempState = [...this.state.images];
-        let oldPositionIndex = tempState.findIndex(image => image.order === oldPositionOrder);
-        let newPositionIndex = tempState.findIndex(image => image.order === newPositionOrder);
-        
-        if(oldPositionIndex !== -1 && newPositionIndex !== -1){
-            tempState[oldPositionIndex].order = newPositionOrder;
-            tempState[newPositionIndex].order = oldPositionOrder;
-        }
+        let oldPositionIndex = tempState.findIndex(item => item.order === oldPositionOrder );
+        if( oldPositionIndex !== -1 ){
 
-        this.setState({selectedThumbnail: newPositionOrder, images: tempState  });
-       
+            if(oldPositionOrder < newPositionOrder){
+                tempState.forEach(image =>{
+                    image.order = this.decrementOrder(image.order, oldPositionOrder, newPositionOrder );
+                });
+            }
+
+            if(oldPositionOrder > newPositionOrder){
+                tempState.forEach(image =>{
+                    image.order = this.incrementOrder(image.order, newPositionOrder,oldPositionOrder );
+                });
+            }
+
+
+            tempState[oldPositionIndex].order = newPositionOrder;
+            this.setState({images: tempState, });
+
+            if(this.state.isMobileDevice){
+            
+                this.setState({    selectedThumbnail: newPositionOrder,});
+            }
+
+        }
      }
- 
+
      renderThumbnailPositioner = () =>{
          if(this.state.selectedThumbnail !== false && this.state.isMobileDevice){
           return(
             <ImageUploaderThumbnailPositioner
                thumbnailPosition={this.state.selectedThumbnail}
                thumbnailsCounter={this.state.images.length}
-               changePosition={this.setPositionByPositioner}
+               changePosition={this.setPosition}
                deleteImage={this.onDeleteImage}
                onDisableComponent={() =>{ this.setState({selectedThumbnail: false} ) }}
                />
@@ -185,8 +219,11 @@ class ImageUploader extends React.Component {
                            {this.state.isLoadingImages ? <Preloader /> : ''} 
                      
                         {this.renderThumbnailPositioner()}
-                        
-                <ImageUploaderErrors errors={this.state.errors} onRemoveError={this.onRemoveError}/>
+                {this.state.errors.length ?
+                   <ImageUploaderErrors errors={this.state.errors} onRemoveError={this.onRemoveError}/>
+                 : ''
+                }        
+             
             </div>
         );
     }

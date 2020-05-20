@@ -1,4 +1,4 @@
-import {detectColisionVia} from '.';
+
 
 class CollisionsDetector {
     constructor(rectangles,dragRectangle){
