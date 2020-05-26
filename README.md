@@ -16,7 +16,7 @@ Try [DEMO][demo] and see what it can do :)
 
 #### Zobacz [DEMO][demo]
 
-Uploader zdjęć z możliwością sortowania usuwania ich.
+Uploader zdjęć z możliwością sortowania oraz usuwania ich.
 Zdjęcia są wysłane na zewnętrzny serwer gdzie wracają do uploadera w formie już wygenerowanych urli. 
 
 **Zdjęcia można sortować i usuwać do woli! Złap miniaturkę i przeciągnij w odpowiednie dla Ciebie miejsce! :)**
