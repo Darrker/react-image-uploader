@@ -11,7 +11,7 @@ class ImageUploader extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = { images: [], selectedThumbnail: false, uploadProgress: 0, isMobileDevice: !mobileDetector(), isLoadingImages: false, errors: [] };
+        this.state = { images: [], selectedThumbnail: false, uploadProgress: 0, isMobileDevice: mobileDetector(), isLoadingImages: false, errors: [] };
         this.inputData = React.createRef();
 
     }
@@ -200,11 +200,11 @@ class ImageUploader extends React.Component {
     render(){
         return(
             <div className="image-uploader">
-                <label htmlFor="image-uploader-input" >
+                <label htmlFor="image-uploader-input" className="image-uploader__label" >
                     <span className="image-uploader__button">Dodaj zdjęcia</span>
                     { this.state.images.length > 0 ?  <span className="image-uploader__file-counter">Dodano zdjęć: <span>{this.state.images.length}</span></span> : ''}
                 </label>
-                <input type="file" className="image-uploader__input" ref={this.inputData}
+                <input type="file" className="image-uploader__input" disabled={this.state.isLoadingImages ? true : false}  ref={this.inputData}
                         id="image-uploader-input" 
                         onChange={this.onAddImages}
                         accept="image/png, image/jpeg" multiple/>

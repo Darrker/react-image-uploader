@@ -9,7 +9,7 @@ function App() {
       <ImageUploader requestURL={'http://file-uploader.taureca.com/photos'} requestDataName={'photos'}  />
 
       <footer className="App__footer">
-        Autor R Makosz, <a href="">Zobacz kod na github</a>
+        Autor R Makosz, <a href="https://github.com/Darrker/react-image-uploader">Zobacz kod na github</a>
       </footer>
     </div>
   );

@@ -1,3 +1,10 @@
+$xs: 480px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+
 // iu = image uploader
 
 $iu_border_color: #caf0f8;
@@ -17,6 +24,8 @@ $thumbnail_select_border_color: #ef233c;
 $thumbnail_select_border_width: 4px;
 $thumbnail_margin: 5px;
 
+$thumbnail_size_mobile: 80px;
+
 .image-uploader{
     padding: 20px;
     border: $iu_border_width $iu_border_style $iu_border_color;
@@ -34,14 +43,23 @@ $thumbnail_margin: 5px;
         display: inline-flex;
         cursor: pointer;
         font-weight: 600;
+
+
       
     }
 
     &__file-counter{
-        margin-left: 20px;;
+        margin: 20px;;
         color: #e0fbfc;
     }
 
+    &__label{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+  
 
     &__input{
         position: absolute;
@@ -63,6 +81,11 @@ $thumbnail_margin: 5px;
         height: $thumbnail_size;
         font-size: 12px;
         margin:  $thumbnail_margin;
+
+        @media (max-width: $md){
+            width: $thumbnail_size_mobile;
+            height: $thumbnail_size_mobile;  
+        }
     }
 
     &__thumbnail{
@@ -150,6 +173,10 @@ $thumbnail_margin: 5px;
         font-weight: 600;
         padding: 20px;
         display: block;
+
+        @media (max-width: $md){
+            font-size: 14px;
+        }
     }
 
     &__exit-icon{
@@ -178,11 +205,11 @@ $thumbnail_margin: 5px;
         $action_root: &;
         width: 100%;
         padding: 15px;
-        font-size: 16px;
+        font-size: 14px;
         border-top: 1px solid $iu_border_color;
         box-sizing: border-box;
         &__icon{
-            width: 20px;
+            width: 13px;
         }
 
         &--set-to-previous{
