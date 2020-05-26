@@ -1,5 +1,5 @@
 
-[demo]: https://github.com/Darrker/react-image-uploader
+[demo]: http://image-uploader.taureca.com/
 
 # React Image uploader
 
